@@ -45,7 +45,7 @@ namespace FA.JustBlog.Controllers
         {
             var sx = _unitOfWork.TagRepository.GetAll();
 
-            var postsByCategory = _unitOfWork.PostRepository.GetPostsByCategory(name);
+            var postsByCategory = _unitOfWork.PostRepository.GetPostsByCategory(name).ToList();
             ViewBag.Count = (int)Math.Ceiling(postsByCategory.Count / (decimal)3);
             ViewBag.Title = $"All Posts In Category {name}";
             return View("Index", postsByCategory);
@@ -53,7 +53,7 @@ namespace FA.JustBlog.Controllers
 
         public IActionResult Tag(string name) {
             var sx = _unitOfWork.TagRepository.GetAll();
-            var postsByTag = _unitOfWork.PostRepository.GetPostsByTag(name);
+            var postsByTag = _unitOfWork.PostRepository.GetPostsByTag(name).ToList();
             ViewBag.Count = (int)Math.Ceiling(postsByTag.Count / (decimal)3);
             ViewBag.Title = $"All Posts With Tag \"{name}\"";
             return View("Index", postsByTag);
