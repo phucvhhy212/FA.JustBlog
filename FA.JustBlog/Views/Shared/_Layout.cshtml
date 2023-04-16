@@ -1,0 +1,107 @@
+﻿@using FA.JustBlog.Common;
+@using FA.JustBlog.Core.UnitOfWork
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FA.JustBlog</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/xxxxxxxxstyles.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="/Home">Just Blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto py-4 py-lg-0">
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/Home">Home</a></li>
+                     
+                    <li class="nav-item dropdown" id="dropdown">
+                        <a class="nav-link px-lg-3 py-3 py-lg-4 dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                            Categories
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="menudropdown">
+                            @{
+                                IUnitOfWork iUnitOfWork = new UnitOfWork();
+                                var list = iUnitOfWork.CategoryRepository.GetAll().ToList();
+                                foreach (var item in list)
+                                {
+                                    <li><a class="dropdown-item text-black" href="/Post/Category?name=@item.Name">@item.Name</a></li>
+
+                                }
+                            }
+                        </ul>
+                    </li>
+                    
+
+                    <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/Post">Sample Post</a></li>
+                    @if (User.Identity.IsAuthenticated && RoleUtils.GetAdminRoles().Any(x => User.IsInRole(x)))
+                    {
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" asp-action="Index" asp-controller="Home" asp-area="Admin">Admin</a></li>
+                    }
+
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="contact.html">@User.Identity.Name</a></li>
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="@Url.Action("Logout", "Account", new {area=""})">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" asp-action="Login" asp-controller="Account">Login</a></li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+    @RenderBody()
+
+
+    @Html.Partial("_PartialFooter")
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        var menuItem = document.querySelectorAll(".nav-item");
+        menuItem.forEach(function (items) {
+            items.onmouseover = function () {
+                items.style.backgroundColor = 'lightgray'
+            }
+            items.onmouseout = function () {
+                items.style.backgroundColor = ''
+            }
+        })
+        var dropdown = document.getElementById('dropdown');
+        dropdown.onmouseover = function () {
+            dropdown.style.backgroundColor = 'lightgray'
+            document.getElementById('menudropdown').classList.add('show')
+        }
+        dropdown.onmouseout = function () {
+            dropdown.style.backgroundColor = ''
+            document.getElementById('menudropdown').classList.remove('show')
+        }
+
+        var itemdropdown = document.querySelectorAll('.dropdown-menu li');
+        itemdropdown.forEach(function (item) {
+            item.onmouseover = function () {
+                item.style.backgroundColor = "lightgray";
+            }
+            item.onmouseout = function () {
+                item.style.backgroundColor = "";
+            }
+        })
+        
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

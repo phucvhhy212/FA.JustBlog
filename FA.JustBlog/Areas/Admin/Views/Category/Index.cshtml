@@ -1,0 +1,180 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model List<FA.JustBlog.Core.Models.Category>
+
+<h1 class="mt-4">Manage Category</h1>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Add New</button>
+<div class="card my-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Categories List
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Description</td>
+                        <td>
+                            <!--Modal trigger-->
+                            <a data-toggle="modal" data-target="#modalEdit" class='sidebar-link clicking' data-id="@item.Id" data-name="@item.Name" data-url="@item.UrlSlug" data-description="@item.Description">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            &nbsp;
+                            <a data-toggle="modal" data-target="#modalView" class='sidebar-link clickingView' data-id="@item.Id" data-name="@item.Name" data-url="@item.UrlSlug" data-description="@item.Description">
+
+                                <i class="fa fa-eye"></i>
+                            </a>
+                            
+
+                            <!-- End Modal trigger -->
+                        </td>
+
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalEdit">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form action="@Url.Action("Edit","Category",new{area="Admin"})" method="POST" enctype="multipart/form-data" id="edit-form">
+                <input type="hidden" id="id" name="id">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Category</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="name" name="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="url" class="col-form-label">Url Slug:</label>
+                        <input type="text" class="form-control" id="url" name="url">
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-form-label">Description:</label>
+                        <input type="text" class="form-control" id="description" name="description">
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalView">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Category Information</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="title" class="col-form-label">Id:</label>
+                    <input type="number" class="form-control" id="idV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-form-label">Name:</label>
+                    <input type="text" class="form-control" id="nameV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="category" class="col-form-label">Url Slug:</label>
+                    <input type="text" class="form-control" id="urlV" disabled>
+                </div>
+
+                <div class="form-group ">
+                    <label for="rate" class="col-form-label">Description:</label>
+                    <input type="text" class="form-control" id="descriptionV" name="description" disabled>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalAdd">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add a new category</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <form action="/Admin/Category/Add" method="POST" enctype="multipart/form-data" id="add-form">
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nameA" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="nameA" name="name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="urlA" class="col-form-label">Url Slug:</label>
+                        <input type="text" class="form-control" id="urlA" name="url">
+                    </div>
+                    <div class="form-group">
+                        <label for="descriptionA" class="col-form-label">Description:</label>
+                        <input type="text" class="form-control" id="descriptionA" name="description">
+                    </div>
+                    
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+

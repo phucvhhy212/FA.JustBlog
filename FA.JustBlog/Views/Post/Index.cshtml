@@ -1,0 +1,161 @@
+﻿@model List<FA.JustBlog.Core.Models.Post>
+@using static FA.JustBlog.CustomHelper.CustomHTMLHelper
+@using FA.JustBlog.Core.Models
+@{
+    var sort = ViewBag.MostViewedPosts as List<Post>;
+    var latest = ViewBag.SortByLatest as List<Post>;
+    int count = ViewBag.Count;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Clean Blog - Start Bootstrap Theme</title>
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Navigation-->
+    <!-- Page Header-->
+    <header class="masthead" style="background-image: url('/assets/img/home-bg.jpg')">
+        <div class="container position-relative px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="site-heading">
+                        <h1>Clean Blog</h1>
+                        <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content-->
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-8">
+                <h1>@ViewBag.Title</h1>
+                <hr class="my-4">
+
+                <!-- Post preview-->
+                @foreach (var item in Model)
+                {
+                    <div class="post-preview">
+
+                        <h2 class="post-title">
+                            @Html.ActionLink(item.Title, "Details","Post" , new {@year =
+                        item.PostedOn.Year, month = item.PostedOn.Month.ToString("00"),
+                        title = item.UrlSlug},null)
+                        </h2>
+                        <h4 class="post-subtitle">@item.PostContent</h4>
+
+                        <p class="post-meta mb-2">
+                            Posted
+                            @item.PostedOn
+                            with rate @Math.Round((decimal)item.TotalRate/item.RateCount, 2) by @item.ViewCount view(s)
+                            <br />
+
+                            <span class="categorylink">Category @Html.CategoryLink($"/Post/Category?name={item.Category.Name}",item.Category.Name) <br /></span>
+                            <div class="post-meta taglink">
+                                Tag:  @foreach (var tag in item.PostTags)
+                                {
+                                    <span>@Html.TagLink($"/Post/Tag?name={tag.Tag.Name}",tag.Tag.Name)</span>
+                                }
+                            </div>
+                        </p>
+                    </div>
+                    <hr class="my-4">
+                }
+
+                <!-- Pager-->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" id="previous"><a class="page-link">Previous</a></li>
+
+                        @for (int i = 1; i <= count; i++)
+                        {
+                            <li class="page-item"><a class="page-link" href="/Post?page=@i">@i</a></li>
+                        }
+                        <li class="page-item" id="next"><a class="page-link">Next</a></li>
+
+                    </ul>
+                </nav>
+            </div>
+            @if(@latest !=null){
+            <div class="col-md-2 col-lg-4 col-xl-4">
+
+                @Html.Partial("~/Views/Home/_PartialAboutCard.cshtml")
+                <div class="mt-3">
+                    <h2>Most Viewed Post</h2>
+                    @Html.Partial("~/Views/Post/_ListPosts.cshtml",@sort)
+                </div>
+                <div class="mt-3">
+                    <h2>Latest Posts</h2>
+                    @Html.Partial("~/Views/Post/_ListPosts.cshtml", @latest)
+                </div>
+            </div>
+            }
+        </div>
+    </div>
+
+    <!-- Footer-->
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+<script>
+        const myUrl = new URL(window.location.toLocaleString()).searchParams;
+        var value = myUrl.get('page');
+        if(!value){
+            value=1;
+        }
+        var previousBtn = document.getElementById('previous');
+
+        if (value <= 1) {
+            previousBtn.classList.add('disabled');
+        }
+        else {
+            previousBtn.classList.remove('disabled');
+            previousBtn.onclick = function () {
+                var x = Number(value)-1
+                location.href = `/Post?page=${x}`;
+            }
+        }
+        var nextBtn = document.getElementById('next');
+        if (value == @count) {
+            nextBtn.classList.add('disabled');
+        }
+        else {
+            nextBtn.classList.remove('disabled');
+            nextBtn.onclick = function () {
+                var x = Number(value) + 1;
+                location.href = `/Post?page=${x}`;
+            }
+        }
+
+        if(window.location.href.includes("Category")){
+            var categoryLinks = document.querySelectorAll(".categorylink");
+            categoryLinks.forEach(function(categoryLink){
+                categoryLink.remove();
+
+            });
+        }
+        if (window.location.href.includes("Tag")) {
+            var tagLinks = document.querySelectorAll(".taglink");
+            tagLinks.forEach(function(tagLink){
+                tagLink.remove();
+
+            });
+        }
+
+    </script>
+</body>
+</html>

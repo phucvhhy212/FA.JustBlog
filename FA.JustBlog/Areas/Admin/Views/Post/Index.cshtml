@@ -1,0 +1,344 @@
+﻿@using FA.JustBlog.Core.Models;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var categoriesList = ViewBag.categories as List<Category>;
+}
+
+@model List<FA.JustBlog.Core.Models.Post>
+
+<h1 class="mt-4">@ViewBag.message</h1>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Add New</button>
+<div class="card my-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Posts List
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Short Description</th>
+                    <th>Content</th>
+                    <th>Posted Date</th>
+                    <th>Published</th>
+                    <th>Category</th>
+                    <th>View Count</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Title</th>
+                    <th>Short Description</th>
+                    <th>Content</th>
+                    <th>Posted Date</th>
+                    <th>Published</th>
+                    <th>Category</th>
+                    <th>View Count</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Title</td>
+                        <td>@item.ShortDescription</td>
+                        <td>@item.PostContent</td>
+                        <td>@item.PostedOn</td>
+                        <td>@item.Published</td>
+                        <td>@item.Category.Name</td>
+                        <td>@item.ViewCount</td>
+                        <td>
+                            <!--Modal trigger-->
+                            <a data-toggle="modal" data-target="#modalEdit" class='sidebar-link clicking' data-id="@item.Id" data-title="@item.Title" data-url="@item.UrlSlug" data-description="@item.ShortDescription" data-content="@item.PostContent" data-published="@item.Published" data-posteddate="@item.PostedOn.ToString("yyyy-MM-dd")" data-modified="@item.Modified" data-category="@item.CategoryId" data-viewcount="@item.ViewCount" data-ratecount="@item.RateCount" data-totalrate="@item.TotalRate">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            &nbsp;
+                            <a data-toggle="modal" data-target="#modalView" class='sidebar-link clickingView' data-id="@item.Id" data-title="@item.Title" data-url="@item.UrlSlug" data-description="@item.ShortDescription" data-content="@item.PostContent" data-published="@item.Published" data-posteddate="@item.PostedOn.ToString("yyyy-MM-dd")" data-modified="@item.Modified" data-category="@item.CategoryId" data-viewcount="@item.ViewCount" data-ratecount="@item.RateCount" data-totalrate="@item.TotalRate">
+                                <i class="fa fa-eye"></i>
+                            </a>
+
+
+                            <!-- End Modal trigger -->
+                        </td>
+
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalEdit">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form action="@Url.Action("Edit","Post",new{area="Admin"})" method="POST" enctype="multipart/form-data" id="edit-form">
+                <input type="hidden" id="id" name="id">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit Post</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="title" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-form-label">Short Description:</label>
+                        <input type="text" class="form-control" id="description" name="description">
+                    </div>
+                    <div class="form-group">
+                        <label for="content" class="col-form-label">Content:</label>
+                        <input type="text" class="form-control" id="content" name="content">
+                    </div>
+                    <div class="form-group">
+                        <label for="url" class="col-form-label">Url Slug:</label>
+                        <input type="text" class="form-control" id="url" name="url">
+                    </div>
+                    <div class="form-group">
+                        <label for="published" class="col-form-label">Published:</label>
+                        <select class="form-control" id="published" name="published">
+                            <option value="1">True</option>
+                            <option value="0">False</option>
+                        </select>
+                    </div>
+                    <div class="form-group datetimepicker1">
+                        <label for="postedDate" class="col-form-label">Posted Date:</label>
+                        <input type="date" class="form-control" id="postedDate" name="postedDate">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        
+                    </div>
+                    <div class="form-group">
+                        <label for="modified" class="col-form-label">Modified:</label>
+                        <select class="form-control" id="modified" name="modified">
+                            <option value="1">True</option>
+                            <option value="0">False</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category" class="col-form-label">Category:</label>
+                        <select class="form-control" id="category" name="category">
+                            @{
+                                foreach (var item in categoriesList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ratecount" class="col-form-label">Rate Count:</label>
+                        <input type="text" class="form-control" id="ratecount" name="ratecount">
+                    </div>
+                    <div class="form-group">
+                        <label for="viewcount" class="col-form-label">View Count:</label>
+                        <input type="number" class="form-control" id="viewcount" name="viewcount">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="totalrate" class="col-form-label">Total Rate:</label>
+                        <input type="number" class="form-control" id="totalrate" name="totalrate">
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalView">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Post Information</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="idV" class="col-form-label">Id:</label>
+                    <input type="number" class="form-control" id="idV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="titleV" class="col-form-label">Title:</label>
+                    <input type="text" class="form-control" id="titleV" name="title" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="descriptionV" class="col-form-label">Short Description:</label>
+                    <input type="text" class="form-control" id="descriptionV" name="description" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="contentV" class="col-form-label">Content:</label>
+                    <input type="text" class="form-control" id="contentV" name="content" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="urlV" class="col-form-label">Url Slug:</label>
+                    <input type="text" class="form-control" id="urlV" name="url" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="publishedV" class="col-form-label">Published:</label>
+                    <select class="form-control" id="publishedV" name="published" disabled>
+                        <option value="1">True</option>
+                        <option value="0">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="postedDateV" class="col-form-label">Posted Date:</label>
+                    <input type="date" class="form-control" id="postedDateV" name="postedDate" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="modifiedV" class="col-form-label">Modified:</label>
+                    <select class="form-control" id="modifiedV" name="modified" disabled>
+                        <option value="1">True</option>
+                        <option value="0">False</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="categoryV" class="col-form-label">Category:</label>
+                    <select class="form-control" id="categoryV" name="category" disabled>
+                        @{
+                            foreach (var item in categoriesList)
+                            {
+                                <option value="@item.Id">@item.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ratecountV" class="col-form-label">Rate Count:</label>
+                    <input type="text" class="form-control" id="ratecountV" name="ratecount" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="viewcountV" class="col-form-label">View Count:</label>
+                    <input type="number" class="form-control" id="viewcountV" name="viewcount" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="totalrateV" class="col-form-label">Total Rate:</label>
+                    <input type="number" class="form-control" id="totalrateV" name="totalrate" disabled>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalAdd">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+
+            <form action="@Url.Action("Add","Post",new{area="Admin"})" method="POST" enctype="multipart/form-data" id="add-form">
+                <input type="hidden" id="id" name="id">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add a new post</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="titleA" class="col-form-label">Title:</label>
+                        <input type="text" class="form-control" id="titleA" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="descriptionA" class="col-form-label">Short Description:</label>
+                        <input type="text" class="form-control" id="descriptionA" name="description">
+                    </div>
+                    <div class="form-group">
+                        <label for="contentA" class="col-form-label">Content:</label>
+                        <input type="text" class="form-control" id="contentA" name="content">
+                    </div>
+                    <div class="form-group">
+                        <label for="urlA" class="col-form-label">Url Slug:</label>
+                        <input type="text" class="form-control" id="urlA" name="url">
+                    </div>
+                    <div class="form-group">
+                        <label for="publishedA" class="col-form-label">Published:</label>
+                        <select class="form-control" id="publishedA" name="published">
+                            <option value="1">True</option>
+                            <option value="0">False</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="postedDateA" class="col-form-label">Posted Date:</label>
+                        <input type="date" class="form-control" id="postedDateA" name="postedDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="modifiedA" class="col-form-label">Modified:</label>
+                        <select class="form-control" id="modifiedA" name="modified">
+                            <option value="1">True</option>
+                            <option value="0">False</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="categoryA" class="col-form-label">Category:</label>
+                        <select class="form-control" id="categoryA" name="category">
+                            @{
+                                foreach (var item in categoriesList)
+                                {
+                                    <option value="@item.Id">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ratecountA" class="col-form-label">Rate Count:</label>
+                        <input type="text" class="form-control" id="ratecountA" name="ratecount">
+                    </div>
+                    <div class="form-group">
+                        <label for="viewcountA" class="col-form-label">View Count:</label>
+                        <input type="number" class="form-control" id="viewcountA" name="viewcount">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="totalrateA" class="col-form-label">Total Rate:</label>
+                        <input type="number" class="form-control" id="totalrateA" name="totalrate">
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+
+

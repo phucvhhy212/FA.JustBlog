@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@model List<FA.JustBlog.Core.Models.Comment>
+<h1 class="mt-4">Manage Comment</h1>
+<div class="card my-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Comments List
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>PostId</th>
+                    <th>Content</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>PostId</th>
+                    <th>Content</th>
+                    <th>Time</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.Email</td>
+                        <td>@item.PostId</td>
+                        <td>@item.CommentText</td>
+                        <td>@item.CommentTime</td>
+
+                        <td>
+                            <!--Modal trigger-->
+                            <a class='sidebar-link' onclick="confirm('Are you sure ?')" href="/Admin/Comment/Delete?id=6@item.Id">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                            &nbsp;
+                            <a data-toggle="modal" data-target="#modalView" class='sidebar-link clickingView' data-id="@item.Id" data-name="@item.Name" data-email="@item.Email" data-post="@item.PostId" data-header="@item.CommentHeader" data-content="@item.CommentText" data-time="@item.CommentTime.ToString("yyyy-MM-dd")">
+                                <i class="fa fa-eye"></i>
+                            </a>
+
+
+                            <!-- End Modal trigger -->
+                        </td>
+
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalView">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Comment Information</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="title" class="col-form-label">Id:</label>
+                    <input type="number" class="form-control" id="idV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="title" class="col-form-label">Name:</label>
+                    <input type="text" class="form-control" id="nameV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="emailV" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" id="emailV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="postV" class="col-form-label">Post Id:</label>
+                    <input type="text" class="form-control" id="postV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="headerV" class="col-form-label">Header:</label>
+                    <input type="text" class="form-control" id="headerV" disabled>
+                </div>
+                <div class="form-group ">
+                    <label for="contentV" class="col-form-label">Content:</label>
+                    <input type="text" class="form-control" id="contentV" disabled>
+                </div>
+                <div class="form-group ">
+                    <label for="timeV" class="col-form-label">Comment Time:</label>
+                    <input type="date" class="form-control" id="timeV" disabled>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+

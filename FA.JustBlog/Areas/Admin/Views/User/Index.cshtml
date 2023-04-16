@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@model List<FA.JustBlog.Areas.Admin.Controllers.UserController.UserAndRole>
+<h1 class="mt-4">Manage User</h1>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Add New</button>
+<div class="card my-4">
+    <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        Users List
+    </div>
+    <div class="card-body">
+        <table id="datatablesSimple">
+            <thead>
+                <tr>
+                    <th>UserName</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Confirmed Email</th>
+                    <th>Confirmed Phone Number</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>UserName</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Confirmed Email</th>
+                    <th>Confirmed Phone Number</th>
+                    <th>Action</th>
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.UserName</td>
+                        <td>@item.Email</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.EmailConfirmed</td>
+                        <td>@item.PhoneNumberConfirmed</td>
+
+                        <td>
+                            <!--Modal trigger-->
+                            <a data-toggle="modal" data-target="#modalEdit" class='sidebar-link clicking' data-id="@item.Id" data-name="@item.UserName" data-phone="@item.PhoneNumber" data-email="@item.Email" data-emailconfirm="@item.EmailConfirmed" data-phoneconfirm="@item.PhoneNumberConfirmed" data-failcount="@item.AccessFailedCount" data-twofactor="@item.TwoFactorEnabled">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            &nbsp;
+                            <a data-toggle="modal" data-target="#modalView" class='sidebar-link clickingView' data-id="@item.Id" data-name="@item.UserName" data-phone="@item.PhoneNumber" data-email="@item.Email" data-emailconfirm="@item.EmailConfirmed" data-phoneconfirm="@item.PhoneNumberConfirmed" data-failcount="@item.AccessFailedCount" data-twofactor="@item.TwoFactorEnabled">
+
+                                <i class="fa fa-eye"></i>
+                            </a>
+
+
+                            <!-- End Modal trigger -->
+                        </td>
+
+                    </tr>
+
+                }
+
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+

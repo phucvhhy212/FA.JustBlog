@@ -1,0 +1,21 @@
+﻿@model List<FA.JustBlog.Core.Models.Post>
+    <hr class="my-4">
+    @foreach (var item in Model)
+    {
+        <div class="post-preview">
+
+        <h4 class="post-title">
+            @Html.ActionLink(item.Title, "Details","Post" , new {@year =
+        item.PostedOn.Year, month = item.PostedOn.Month.ToString("00"),
+        title = item.UrlSlug},null)
+        </h4>
+                
+           
+            <p class="post-meta">
+                Posted
+                @item.PostedOn
+                with rate @Math.Round((decimal)item.TotalRate/item.RateCount, 2) by @item.ViewCount view(s)
+            </p>
+        </div>
+        <hr class="my-4">
+    }
