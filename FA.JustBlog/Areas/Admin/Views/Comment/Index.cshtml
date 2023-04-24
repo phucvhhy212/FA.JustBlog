@@ -44,7 +44,7 @@
 
                         <td>
                             <!--Modal trigger-->
-                            <a class='sidebar-link' onclick="confirm('Are you sure ?')" href="/Admin/Comment/Delete?id=6@item.Id">
+                            <a class='sidebar-link' onclick="var r = confirm('Are you sure ?');if(r){window.location='/Admin/Comment/Delete?id=@item.Id'}">
                                 <i class="fa fa-trash"></i>
                             </a>
                             &nbsp;

@@ -72,6 +72,7 @@ namespace FA.JustBlog.Core.DbInitializer
 
                 AppUser userC = _context.AppUsers.FirstOrDefault(u => u.UserName == "sondh");
                 _userManager.AddToRoleAsync(userC, RoleUtils.CONTRIBUTOR).GetAwaiter().GetResult();
+                _userManager.AddToRoleAsync(userC, RoleUtils.USER).GetAwaiter().GetResult();
 
                 AppUser userU = _context.AppUsers.FirstOrDefault(u => u.UserName == "kienvv");
                 _userManager.AddToRoleAsync(userU, RoleUtils.USER).GetAwaiter().GetResult();

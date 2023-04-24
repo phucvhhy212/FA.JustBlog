@@ -3,7 +3,6 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
 }
 @model List<FA.JustBlog.Core.Models.Category>
-
 <h1 class="mt-4">Manage Category</h1>
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Add New</button>
 <div class="card my-4">
@@ -82,7 +81,8 @@
                     </div>
                     <div class="form-group">
                         <label for="description" class="col-form-label">Description:</label>
-                        <input type="text" class="form-control" id="description" name="description">
+                        <textarea class="form-control" id="description" name="description"></textarea>
+                        
                     </div>
                 </div>
 
@@ -162,7 +162,7 @@
                     </div>
                     <div class="form-group">
                         <label for="descriptionA" class="col-form-label">Description:</label>
-                        <input type="text" class="form-control" id="descriptionA" name="description">
+                        <textarea id="descriptionA" name="description"></textarea>
                     </div>
                     
                 </div>

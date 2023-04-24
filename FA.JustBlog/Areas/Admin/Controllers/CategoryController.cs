@@ -1,12 +1,15 @@
-﻿using FA.JustBlog.Core.Models;
+﻿using FA.JustBlog.Common;
+using FA.JustBlog.Core.Models;
 using FA.JustBlog.Core.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FA.JustBlog.Areas.Admin.Controllers
 {
 	[Area("Admin")]
+    [Authorize]
 	[Route("Admin/{controller}/{action}")]
-	public class CategoryController : Controller
+    public class CategoryController : Controller
 	{
 		private IUnitOfWork _unitOfWork;
 
@@ -14,13 +17,17 @@ namespace FA.JustBlog.Areas.Admin.Controllers
 		{
 			_unitOfWork = unitOfWork;
 		}
-		public IActionResult Index()
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
+
+        public IActionResult Index()
 		{
 			var categories = _unitOfWork.CategoryRepository.GetAll();
 			return View("~/Areas/Admin/Views/Category/Index.cshtml",categories);
 		}
 		[HttpPost]
-		public IActionResult Edit() {
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
+
+        public IActionResult Edit() {
 			Category c = new Category
 			{
 				Id = int.Parse(HttpContext.Request.Form["id"]),
@@ -35,7 +42,9 @@ namespace FA.JustBlog.Areas.Admin.Controllers
 
 
 		[HttpPost]
-		public IActionResult Add() {
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
+
+        public IActionResult Add() {
 			Category c = new Category
 			{
 				Name = HttpContext.Request.Form["name"],

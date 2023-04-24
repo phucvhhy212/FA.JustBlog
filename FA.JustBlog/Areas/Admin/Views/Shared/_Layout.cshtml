@@ -26,6 +26,7 @@
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
     <script src="~/lib/jquery-validation/dist/validation.js"></script>
     <script src="~/lib/jquery-validation/dist/additional-methods.js"></script>
+    <script src="~/assets/ckeditor/ckeditor.js"></script>
 
 </head>
 <body class="sb-nav-fixed">
@@ -49,7 +50,7 @@
                     <li><a class="dropdown-item" href="#!">Settings</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="#!">Logout</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Logout", "Account", new {area=""})">Logout</a></li>
                 </ul>
             </li>
         </ul>
@@ -116,7 +117,7 @@
                                 <a class="nav-link" href="@Url.Action("Index","Comment",new{area="Admin"})">Comments List</a>
                             </nav>
                         </div>
-                        
+
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRoles" aria-expanded="false" aria-controls="collapseRoles">
                             <div class="sb-nav-link-icon"><i class="fas fa-unlock"></i></div>
                             Role
@@ -127,7 +128,7 @@
                                 <a class="nav-link" href="@Url.Action("Index","Role",new{area="Admin"})">Roles List</a>
                             </nav>
                         </div>
-                        
+
                         <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseUsers" aria-expanded="false" aria-controls="collapseUsers">
                             <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
                             User
@@ -181,16 +182,18 @@
                 $("#id").val($(this).data('id'));
                 $("#name").val($(this).data('name'));
                 $("#url").val($(this).data('url'));
-                $("#description").val($(this).data('description'));
+                //$("#description").val($(this).data('description'));
+                if ($('#description').length)
+                    CKEDITOR.instances['description'].setData($(this).data('description'))
                 $('#count').val($(this).data('count'));
                 $('#title').val($(this).data('title'));
                 $('#content').val($(this).data('content'));
 
                 //$('#published').val($(this).data('published'));
-                if(($(this).data('published')) == "True"){        
+                if (($(this).data('published')) == "True") {
                     $("#published option[value='1']").prop('selected', true);
                 }
-                else{
+                else {
                     $("#published option[value='0']").prop('selected', true);
                 }
                 $('#postedDate').val($(this).data('posteddate'));
@@ -204,11 +207,14 @@
                 $('#viewcount').val($(this).data('viewcount'));
                 $('#ratecount').val($(this).data('ratecount'));
                 $('#totalrate').val($(this).data('totalrate'));
+
+                $('#role').val($(this).data('roles'));
+
                 $('#modalEdit').modal('show');
             });
         });
     </script>
-<script>
+    <script>
         $(document).ready(function () {
             $(".clickingView").click(function () { // Click to only happen on announce links
                 $("#idV").val($(this).data('id'));
@@ -243,7 +249,8 @@
                 $('#headerV').val($(this).data('header'));
                 $('#timeV').val($(this).data('time'));
                 $('#stampV').val($(this).data('stamp'));
-
+                $('#phoneV').val($(this).data('phone'));
+                $('#roleV').val($(this).data('roles'));
                 $('#modalView').modal('show');
             });
         });
@@ -253,6 +260,14 @@
             $('#datetimepicker1').datetimepicker();
         });
     </script>
+    <script>
+        if ($("#description").length) {
+            CKEDITOR.config.enterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_BR;
+            CKEDITOR.replace("description")
+            CKEDITOR.replace("descriptionA")
+        }
 
+    </script>
 </body>
 </html>

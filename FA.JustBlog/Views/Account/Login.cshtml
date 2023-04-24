@@ -53,7 +53,7 @@
 
                             <div class="form-outline mb-4">
                                 <label asp-for="UserName" class="control-label"></label>
-                                <input asp-for="UserName" class="form-control form-control-lg"/>
+                                <input asp-for="UserName" class="form-control form-control-lg" />
                                 <span asp-validation-for="UserName" class="text-danger"></span>
                             </div>
 
@@ -63,27 +63,40 @@
                                 <span asp-validation-for="Password" class="text-danger"></span>
                             </div>
 
-                            <div class="form-group form-check">
+                            <div class="form-outline mb-4">
                                 <label class="form-check-label">
                                     <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
-                                </label>    
+                                </label>
                             </div>
 
                             <div class="pt-3 mb-4">
-                                <input type="submit" value="Login" class="btn btn-info btn-lg btn-block"/>
+                                <input type="submit" value="Login" class="btn btn-info btn-lg btn-block" />
                             </div>
-
-                            <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!">Forgot password?</a></p>
-                            <p>Don't have an account? <a href="#!" class="link-info">Register here</a></p>
-
                         </form>
-
                     </div>
+
+                    <div class="px-5 ms-xl-4 mt-2 pt-5 pt-xl-0 mt-xl-n5">
+                        <h3 class="fw-normal mb-3" style="letter-spacing: 1px;">or</h3>
+
+                        <form style="width: 25rem;" class="d-flex" asp-action="ExternalLogin" asp-controller="Account" method="POST">
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-6">
+                                <button type="submit" class="btn btn-primary facebook" name="provider" value="Facebook"> <span>Login with Facebook</span> <i class="fa fa-facebook"></i> </button>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-xs-12 col-sm-6 ">
+                                <button type="submit" class="btn btn-danger google-plus" name="provider" value="Google"> Login with Google <i class="fa fa-google-plus"></i> </button>
+                            </div>
+                        </form>
+                        <p class="small mt-3 mb-5 pb-lg-2"><a class="text-muted" href="@Url.Action("Index", "Home")">Back to Home</a></p>
+                        <p>Don't have an account? <a href="@Url.Action("Register", "Account")" class="link-info">Register here</a></p>
+                    </div>
+
+
+
 
                 </div>
                 <div class="col-sm-6 px-0 d-none d-sm-block">
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img3.webp"
-                        alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
+                         alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
                 </div>
             </div>
         </div>

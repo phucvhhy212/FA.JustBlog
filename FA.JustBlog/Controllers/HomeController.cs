@@ -21,6 +21,11 @@ namespace FA.JustBlog.Controllers
             return View(postList);
         }
 
+        public IActionResult Denied()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

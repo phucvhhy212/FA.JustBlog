@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FA.JustBlog.Core.Migrations
 {
     [DbContext(typeof(JustBlogContext))]
-    [Migration("20230411153422_v1")]
+    [Migration("20230417162322_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,33 +78,66 @@ namespace FA.JustBlog.Core.Migrations
             modelBuilder.Entity("FA.JustBlog.Core.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("CommentHeader")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("CommentText")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1024)
+                        .HasColumnType("nvarchar(1024)");
 
                     b.Property<DateTime>("CommentTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(1249));
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Comment");
+                    b.HasIndex("PostId");
+
+                    b.ToTable("Comment", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CommentHeader = "Nice Post!",
+                            CommentText = "Excellent Well",
+                            CommentTime = new DateTime(2023, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "toan@gmail.com",
+                            Name = "Toan",
+                            PostId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CommentHeader = "Bad",
+                            CommentText = "So Rude",
+                            CommentTime = new DateTime(2022, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "josh@gmail.com",
+                            Name = "Josh Kas",
+                            PostId = 2
+                        });
                 });
 
             modelBuilder.Entity("FA.JustBlog.Core.Models.Post", b =>
@@ -213,7 +246,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 1,
                             Modified = false,
                             PostContent = "Programming is the process of designing, writing, testing, and maintaining software. It involves creating instructions that a computer can execute to solve a particular problem or perform a specific task. Programming languages, such as Java and Python, are used to write these instructions, which are then compiled or interpreted into machine code that a computer can understand.",
-                            PostedOn = new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6254),
+                            PostedOn = new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3161),
                             Published = true,
                             RateCount = 2,
                             ShortDescription = "An overview of programming concepts",
@@ -228,7 +261,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 2,
                             Modified = false,
                             PostContent = "Regular exercise has numerous health benefits. It can help maintain a healthy weight, reduce the risk of chronic diseases such as diabetes and heart disease, improve mental health, and increase overall well-being. Exercise can also improve sleep, increase energy levels, and reduce stress and anxiety. The recommended amount of exercise varies depending on age and fitness level, but generally adults should aim for at least 150 minutes of moderate-intensity aerobic exercise per week.",
-                            PostedOn = new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6261),
+                            PostedOn = new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3163),
                             Published = true,
                             RateCount = 4,
                             ShortDescription = "Why regular exercise is important for health",
@@ -243,7 +276,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 3,
                             Modified = false,
                             PostContent = "Effective time management is essential for productivity and success. It involves prioritizing tasks, setting goals, and planning ahead. One helpful technique is the Pomodoro method, which involves breaking work into 25-minute intervals with short breaks in between. Another strategy is to use a task list or calendar to stay organized and track progress. Time management can also involve delegating tasks, saying no to distractions, and taking breaks to recharge.",
-                            PostedOn = new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6263),
+                            PostedOn = new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3165),
                             Published = true,
                             RateCount = 3,
                             ShortDescription = "Tips for managing your time effectively",
@@ -258,7 +291,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 1,
                             Modified = false,
                             PostContent = "Yoga is a mind-body practice that combines physical postures, breathing exercises, and meditation or relaxation. It has been shown to have numerous health benefits, including reducing stress and anxiety, improving flexibility and balance, and promoting relaxation and better sleep. Yoga may also help reduce inflammation and lower blood pressure and cholesterol levels. There are many different styles of yoga, so it is important to find a practice that works for you. Practicing yoga regularly can be a great addition to a healthy lifestyle.",
-                            PostedOn = new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6264),
+                            PostedOn = new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3166),
                             Published = true,
                             RateCount = 12,
                             ShortDescription = "How practicing yoga can improve your health",
@@ -273,7 +306,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 2,
                             Modified = false,
                             PostContent = "Positive thinking is a mental attitude that focuses on the good in any situation and expects positive outcomes. It has been shown to have numerous benefits, including reducing stress and anxiety, improving overall health and well-being, and increasing resilience and optimism. Positive thinking can help people cope with difficult situations and overcome challenges. It is not about ignoring negative experiences or denying reality, but rather about approaching them with a positive and proactive mindset. Developing a practice of positive thinking can lead to greater happiness and success in all areas of life.",
-                            PostedOn = new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6265),
+                            PostedOn = new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3167),
                             Published = true,
                             RateCount = 14,
                             ShortDescription = "How changing your mindset can change your life",
@@ -603,7 +636,7 @@ namespace FA.JustBlog.Core.Migrations
                 {
                     b.HasOne("FA.JustBlog.Core.Models.Post", "Post")
                         .WithMany("Comments")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,11 +1,14 @@
-﻿using FA.JustBlog.Core.Models;
+﻿using FA.JustBlog.Common;
+using FA.JustBlog.Core.Models;
 using FA.JustBlog.Core.UnitOfWork;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FA.JustBlog.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Route("Admin/{controller}/{action}")]
+    [Authorize]
     public class TagController : Controller
     {
         private IUnitOfWork _unitOfWork;
@@ -13,6 +16,8 @@ namespace FA.JustBlog.Areas.Admin.Controllers
         {
             this._unitOfWork = unitOfWork;
         }
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
+
         public IActionResult Index()
         {
             var tagList = _unitOfWork.TagRepository.GetAll().ToList();
@@ -20,6 +25,8 @@ namespace FA.JustBlog.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
+
         public IActionResult Add()
         {
             Tag t = new Tag
@@ -35,6 +42,8 @@ namespace FA.JustBlog.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
+
         public IActionResult Edit()
         {
             Tag t = new Tag

@@ -1,8 +1,10 @@
 ﻿@{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    var roles = ViewBag.Roles as List<IdentityRole>;
 }
 
+@using Microsoft.AspNetCore.Identity
 @model List<FA.JustBlog.Areas.Admin.Controllers.UserController.UserAndRole>
 <h1 class="mt-4">Manage User</h1>
 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Add New</button>
@@ -19,7 +21,7 @@
                     <th>Email</th>
                     <th>Phone Number</th>
                     <th>Confirmed Email</th>
-                    <th>Confirmed Phone Number</th>
+                    <th>Roles</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -29,7 +31,7 @@
                     <th>Email</th>
                     <th>Phone Number</th>
                     <th>Confirmed Email</th>
-                    <th>Confirmed Phone Number</th>
+                    <th>Roles</th>
                     <th>Action</th>
                 </tr>
             </tfoot>
@@ -41,15 +43,15 @@
                         <td>@item.Email</td>
                         <td>@item.PhoneNumber</td>
                         <td>@item.EmailConfirmed</td>
-                        <td>@item.PhoneNumberConfirmed</td>
+                        <td>@item.RoleNames</td>
 
                         <td>
                             <!--Modal trigger-->
-                            <a data-toggle="modal" data-target="#modalEdit" class='sidebar-link clicking' data-id="@item.Id" data-name="@item.UserName" data-phone="@item.PhoneNumber" data-email="@item.Email" data-emailconfirm="@item.EmailConfirmed" data-phoneconfirm="@item.PhoneNumberConfirmed" data-failcount="@item.AccessFailedCount" data-twofactor="@item.TwoFactorEnabled">
+                            <a data-toggle="modal" data-target="#modalEdit" class='sidebar-link clicking' data-id="@item.Id" data-name="@item.UserName" data-phone="@item.PhoneNumber" data-email="@item.Email" data-emailconfirm="@item.EmailConfirmed" data-phoneconfirm="@item.PhoneNumberConfirmed" data-failcount="@item.AccessFailedCount" data-twofactor="@item.TwoFactorEnabled" data-roles="@item.RoleNames">
                                 <i class="fa fa-pencil"></i>
                             </a>
                             &nbsp;
-                            <a data-toggle="modal" data-target="#modalView" class='sidebar-link clickingView' data-id="@item.Id" data-name="@item.UserName" data-phone="@item.PhoneNumber" data-email="@item.Email" data-emailconfirm="@item.EmailConfirmed" data-phoneconfirm="@item.PhoneNumberConfirmed" data-failcount="@item.AccessFailedCount" data-twofactor="@item.TwoFactorEnabled">
+                            <a data-toggle="modal" data-target="#modalView" class='sidebar-link clickingView' data-id="@item.Id" data-name="@item.UserName" data-phone="@item.PhoneNumber" data-email="@item.Email" data-emailconfirm="@item.EmailConfirmed" data-phoneconfirm="@item.PhoneNumberConfirmed" data-failcount="@item.AccessFailedCount" data-twofactor="@item.TwoFactorEnabled" data-roles="@item.RoleNames">
 
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -68,4 +70,138 @@
     </div>
 </div>
 
+<div class="modal hide fade" id="modalEdit">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form action="@Url.Action("Edit","User",new{area="Admin"})" method="POST" enctype="multipart/form-data" id="edit-form">
+                <input type="hidden" id="id" name="id">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit User Role</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                </div>
 
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="col-form-label">Role:</label>
+                        <select class="form-select" name="roles" multiple aria-label="multiple select example">
+                            @foreach (var item in roles)
+                            {
+                                <option value="@item.Name">@item.Name</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalView">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">User Information</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="idV" class="col-form-label">Id:</label>
+                    <input type="text" class="form-control" id="idV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="nameV" class="col-form-label">User Name:</label>
+                    <input type="text" class="form-control" id="nameV" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="emailV" class="col-form-label">Email:</label>
+                    <input type="text" class="form-control" id="emailV" disabled>
+                </div>
+
+                <div class="form-group ">
+                    <label for="phoneV" class="col-form-label">Phone Number:</label>
+                    <input type="text" class="form-control" id="phoneV" disabled>
+                </div>
+
+                <div class="form-group ">
+                    <label for="roleV" class="col-form-label">Roles:</label>
+                    <input type="text" class="form-control" id="roleV" disabled>
+                </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal hide fade" id="modalAdd">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Add a new user</h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+
+            <form action="@Url.Action("Add","User",new{area="Admin"})" method="POST" enctype="multipart/form-data" id="add-user-form">
+                <!-- Modal body -->
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="nameA" class="col-form-label">User Name:</label>
+                        <input type="text" class="form-control" id="nameA" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="passA" class="col-form-label">Password:</label>
+                        <input type="text" class="form-control" id="passA" name="password">
+                    </div>
+                    <div class="form-group">
+                        <label for="emailA" class="col-form-label">Email:</label>
+                        <input type="text" class="form-control" id="emailA" name="email">
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="phoneA" class="col-form-label">Phone Number:</label>
+                        <input type="text" class="form-control" id="phoneA" name="phone">
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="roleA" class="col-form-label">Roles:</label>
+                        <select class="form-select" name="roles" id="roleA" multiple aria-label="multiple select example">
+                            @foreach (var item in roles)
+                            {
+                                <option value="@item.Name">@item.Name</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

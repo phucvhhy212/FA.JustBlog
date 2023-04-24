@@ -10,7 +10,7 @@ namespace FA.JustBlog.Areas.Admin.Controllers
     [Authorize]
 	public class HomeController : Controller
 	{
-        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}, {RoleUtils.USER}")]
+        [Authorize(Roles = $"{RoleUtils.BLOG_OWER}, {RoleUtils.CONTRIBUTOR}")]
         public IActionResult Index()
 		{
 			return View();

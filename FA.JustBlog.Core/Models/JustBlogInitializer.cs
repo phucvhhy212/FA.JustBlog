@@ -216,6 +216,57 @@ namespace FA.JustBlog.Core.Models
                 {
                     PostId = 3,
                     TagId = 3
+                },new PostTagMap
+                {
+                    PostId = 4,
+                    TagId = 3
+                },new PostTagMap
+                {
+                    PostId = 5,
+                    TagId = 1
+                },new PostTagMap
+                {
+                    PostId = 5,
+                    TagId = 2
+                },new PostTagMap
+                {
+                    PostId = 6,
+                    TagId = 2
+                },new PostTagMap
+                {
+                    PostId = 6,
+                    TagId = 3
+                },new PostTagMap
+                {
+                    PostId = 7,
+                    TagId = 2
+                },new PostTagMap
+                {
+                    PostId = 8,
+                    TagId = 1
+                }
+            });
+            modelBuilder.Entity<Comment>().HasData(new List<Comment>
+            {
+                new Comment
+                {
+                    CommentHeader = "Nice Post!",
+                    CommentText = "Excellent Well",
+                    CommentTime = new DateTime(2023,02,04),
+                    Email = "toan@gmail.com",
+                    Name = "Toan",
+                    Id = 1,
+                    PostId = 1
+                },
+                new Comment
+                {
+                    CommentHeader = "Bad",
+                    CommentText = "So Rude",
+                    CommentTime = new DateTime(2022,12,03),
+                    Email = "josh@gmail.com",
+                    Name = "Josh Kas",
+                    Id = 2,
+                    PostId = 2
                 }
             });
         }

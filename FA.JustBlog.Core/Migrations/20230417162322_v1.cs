@@ -219,20 +219,21 @@ namespace FA.JustBlog.Core.Migrations
                 name: "Comment",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PostId = table.Column<int>(type: "int", nullable: false),
-                    CommentHeader = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommentText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommentTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CommentHeader = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    CommentText = table.Column<string>(type: "nvarchar(1024)", maxLength: 1024, nullable: false),
+                    CommentTime = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(1249))
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comment", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_Posts_Id",
-                        column: x => x.Id,
+                        name: "FK_Comment_Posts_PostId",
+                        column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -290,11 +291,20 @@ namespace FA.JustBlog.Core.Migrations
                     { 1, 1, false, "C# is a modern object-oriented programming language...", new DateTime(2022, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 90, "An introduction to C# programming language.", "Introduction to C#", 100, "introduction-to-c", 100 },
                     { 2, 2, false, "Regular exercise has many benefits...", new DateTime(2022, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), true, 90, "Why regular exercise is important for your health.", "The Benefits of Regular Exercise", 100, "the-benefits-of-regular-exercise", 120 },
                     { 3, 3, false, "Basketball has undergone many changes...", new DateTime(2022, 1, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), false, 80, "How basketball has changed over the years.", "The Evolution of Basketball", 100, "the-evolution-of-basketball", 120 },
-                    { 4, 1, false, "Programming is the process of designing, writing, testing, and maintaining software. It involves creating instructions that a computer can execute to solve a particular problem or perform a specific task. Programming languages, such as Java and Python, are used to write these instructions, which are then compiled or interpreted into machine code that a computer can understand.", new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6254), true, 2, "An overview of programming concepts", "Introduction to Programming", 8, "introduction-to-programming", 10 },
-                    { 5, 2, false, "Regular exercise has numerous health benefits. It can help maintain a healthy weight, reduce the risk of chronic diseases such as diabetes and heart disease, improve mental health, and increase overall well-being. Exercise can also improve sleep, increase energy levels, and reduce stress and anxiety. The recommended amount of exercise varies depending on age and fitness level, but generally adults should aim for at least 150 minutes of moderate-intensity aerobic exercise per week.", new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6261), true, 4, "Why regular exercise is important for health", "The Benefits of Exercise", 16, "benefits-of-exercise", 15 },
-                    { 6, 3, false, "Effective time management is essential for productivity and success. It involves prioritizing tasks, setting goals, and planning ahead. One helpful technique is the Pomodoro method, which involves breaking work into 25-minute intervals with short breaks in between. Another strategy is to use a task list or calendar to stay organized and track progress. Time management can also involve delegating tasks, saying no to distractions, and taking breaks to recharge.", new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6263), true, 3, "Tips for managing your time effectively", "The Importance of Time Management", 12, "importance-of-time-management", 20 },
-                    { 7, 1, false, "Yoga is a mind-body practice that combines physical postures, breathing exercises, and meditation or relaxation. It has been shown to have numerous health benefits, including reducing stress and anxiety, improving flexibility and balance, and promoting relaxation and better sleep. Yoga may also help reduce inflammation and lower blood pressure and cholesterol levels. There are many different styles of yoga, so it is important to find a practice that works for you. Practicing yoga regularly can be a great addition to a healthy lifestyle.", new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6264), true, 12, "How practicing yoga can improve your health", "The Benefits of Yoga", 48, "benefits-of-yoga", 50 },
-                    { 8, 2, false, "Positive thinking is a mental attitude that focuses on the good in any situation and expects positive outcomes. It has been shown to have numerous benefits, including reducing stress and anxiety, improving overall health and well-being, and increasing resilience and optimism. Positive thinking can help people cope with difficult situations and overcome challenges. It is not about ignoring negative experiences or denying reality, but rather about approaching them with a positive and proactive mindset. Developing a practice of positive thinking can lead to greater happiness and success in all areas of life.", new DateTime(2023, 4, 11, 22, 34, 21, 814, DateTimeKind.Local).AddTicks(6265), true, 14, "How changing your mindset can change your life", "The Power of Positive Thinking", 56, "power-of-positive-thinking", 55 }
+                    { 4, 1, false, "Programming is the process of designing, writing, testing, and maintaining software. It involves creating instructions that a computer can execute to solve a particular problem or perform a specific task. Programming languages, such as Java and Python, are used to write these instructions, which are then compiled or interpreted into machine code that a computer can understand.", new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3161), true, 2, "An overview of programming concepts", "Introduction to Programming", 8, "introduction-to-programming", 10 },
+                    { 5, 2, false, "Regular exercise has numerous health benefits. It can help maintain a healthy weight, reduce the risk of chronic diseases such as diabetes and heart disease, improve mental health, and increase overall well-being. Exercise can also improve sleep, increase energy levels, and reduce stress and anxiety. The recommended amount of exercise varies depending on age and fitness level, but generally adults should aim for at least 150 minutes of moderate-intensity aerobic exercise per week.", new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3163), true, 4, "Why regular exercise is important for health", "The Benefits of Exercise", 16, "benefits-of-exercise", 15 },
+                    { 6, 3, false, "Effective time management is essential for productivity and success. It involves prioritizing tasks, setting goals, and planning ahead. One helpful technique is the Pomodoro method, which involves breaking work into 25-minute intervals with short breaks in between. Another strategy is to use a task list or calendar to stay organized and track progress. Time management can also involve delegating tasks, saying no to distractions, and taking breaks to recharge.", new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3165), true, 3, "Tips for managing your time effectively", "The Importance of Time Management", 12, "importance-of-time-management", 20 },
+                    { 7, 1, false, "Yoga is a mind-body practice that combines physical postures, breathing exercises, and meditation or relaxation. It has been shown to have numerous health benefits, including reducing stress and anxiety, improving flexibility and balance, and promoting relaxation and better sleep. Yoga may also help reduce inflammation and lower blood pressure and cholesterol levels. There are many different styles of yoga, so it is important to find a practice that works for you. Practicing yoga regularly can be a great addition to a healthy lifestyle.", new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3166), true, 12, "How practicing yoga can improve your health", "The Benefits of Yoga", 48, "benefits-of-yoga", 50 },
+                    { 8, 2, false, "Positive thinking is a mental attitude that focuses on the good in any situation and expects positive outcomes. It has been shown to have numerous benefits, including reducing stress and anxiety, improving overall health and well-being, and increasing resilience and optimism. Positive thinking can help people cope with difficult situations and overcome challenges. It is not about ignoring negative experiences or denying reality, but rather about approaching them with a positive and proactive mindset. Developing a practice of positive thinking can lead to greater happiness and success in all areas of life.", new DateTime(2023, 4, 17, 23, 23, 22, 393, DateTimeKind.Local).AddTicks(3167), true, 14, "How changing your mindset can change your life", "The Power of Positive Thinking", 56, "power-of-positive-thinking", 55 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Comment",
+                columns: new[] { "Id", "CommentHeader", "CommentText", "CommentTime", "Email", "Name", "PostId" },
+                values: new object[,]
+                {
+                    { 1, "Nice Post!", "Excellent Well", new DateTime(2023, 2, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), "toan@gmail.com", "Toan", 1 },
+                    { 2, "Bad", "So Rude", new DateTime(2022, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), "josh@gmail.com", "Josh Kas", 2 }
                 });
 
             migrationBuilder.InsertData(
@@ -348,6 +358,11 @@ namespace FA.JustBlog.Core.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_PostId",
+                table: "Comment",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_CategoryId",

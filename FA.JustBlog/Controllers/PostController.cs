@@ -25,6 +25,7 @@ namespace FA.JustBlog.Controllers
             var result = _unitOfWork.PostRepository.GetAll().Skip((page.Value-1)*3).Take(3).ToList();
             ViewBag.Count = (int)Math.Ceiling(_unitOfWork.PostRepository.GetAll().Count / (decimal)3);
             ViewBag.Title = "All Posts";
+            ViewBag.PopularTags = _unitOfWork.TagRepository.GetAll().OrderByDescending(x => x.Count).ToList();
             return View(result);
         }
 
@@ -62,6 +63,7 @@ namespace FA.JustBlog.Controllers
         public IActionResult Details(int year, int month, string title)
         {
             var post = _unitOfWork.PostRepository.FindPost(year, month, title);
+            ViewBag.Comments = _unitOfWork.CommentRepository.GetCommentsForPost(post.Id);
             if (post == null)
                 return NotFound();
 

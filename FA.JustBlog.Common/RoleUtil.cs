@@ -9,7 +9,7 @@
 
         public static List<string> GetAdminRoles()
         {
-            return new List<string>() { BLOG_OWER, CONTRIBUTOR, USER };
+            return new List<string>() { BLOG_OWER, CONTRIBUTOR };
         }
     }
 }
