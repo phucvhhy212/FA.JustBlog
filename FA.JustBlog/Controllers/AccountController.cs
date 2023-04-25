@@ -1,10 +1,14 @@
 ﻿using System.Security.Claims;
+using System.Text;
 using FA.JustBlog.Common;
 using FA.JustBlog.Core.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using MimeKit;
 
 namespace FA.JustBlog.Controllers
 {
@@ -13,11 +17,13 @@ namespace FA.JustBlog.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
-        //public IList<AuthenticationScheme> ExternalLogins { get; set; }
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private readonly IEmailSender _emailSender;
+
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         public IActionResult Login()
@@ -54,7 +60,8 @@ namespace FA.JustBlog.Controllers
             }
             else
             {
-                return RedirectToAction("Login");
+                ModelState.AddModelError(string.Empty, "Account's email not confirmed!");
+                return View();
             }
         }
 
@@ -84,15 +91,45 @@ namespace FA.JustBlog.Controllers
                 return View();
             }
 
-            var result = await _userManager.CreateAsync(new AppUser
+            var user = new AppUser
             {
                 UserName = username,
                 Email = email,
-                PhoneNumber = phone,
-            }, password);
+                PhoneNumber = phone
+            };
+            var result = await _userManager.CreateAsync(user, password);
             if (result.Succeeded)
             {
-                return RedirectToAction("Login");
+                // phát sinh token theo thông tin user để xác nhận email
+                // mỗi user dựa vào thông tin sẽ có một mã riêng, mã này nhúng vào link
+                // trong email gửi đi để người dùng xác nhận
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                // callbackUrl = /Account/ConfirmEmail?userId=useridxx&code=codexxxx
+                // Link trong email người dùng bấm vào, nó sẽ gọi Page: /Acount/ConfirmEmail để xác nhận
+                var callbackUrl = Url.Action(
+                    "ConfirmEmail", "Account",
+                    new { userId = user.Id, code = code }
+                    );
+
+                // Gửi email    
+                await _emailSender.SendEmailAsync(email, "Xác nhận địa chỉ email",
+                    $"Hãy xác nhận địa chỉ email bằng cách <a href='{callbackUrl}'>Bấm vào đây</a>.");
+
+                if (_userManager.Options.SignIn.RequireConfirmedEmail)
+                {
+                    // Nếu cấu hình phải xác thực email mới được đăng nhập thì chuyển hướng đến trang
+                    // RegisterConfirmation - chỉ để hiện thông báo cho biết người dùng cần mở email xác nhận
+                    return Redirect($"RegisterConfirmation?email={email}");
+                }
+                else
+                {
+                    // Không cần xác thực - đăng nhập luôn
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index","Home");
+                }
+                
             }
 
             result.Errors.ToList().ForEach(error =>
@@ -105,10 +142,7 @@ namespace FA.JustBlog.Controllers
         [HttpPost]
         public IActionResult ExternalLogin(string provider, string returnUrl = null)
         {
-            //var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
-
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, Url.Action("Callback", "Account"));
-
             return new ChallengeResult(provider, properties);
         }
 
@@ -168,6 +202,52 @@ namespace FA.JustBlog.Controllers
             }
             return RedirectToAction("Login");
 
+        }
+ 
+
+        public async Task<IActionResult> RegisterConfirmation(string email)
+        {
+            if (email == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return NotFound($"Cannot find any user with email: '{email}'.");
+            }
+            if (user.EmailConfirmed)
+            {
+                // Tài khoản đã xác thực email
+                return Content("Account's email already confirmed!");
+            }
+            return View("~/Views/Account/RegisterConfirmation.cshtml",email);
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId,string code)
+        {
+            if (userId == null || code == null)
+            {
+                return RedirectToAction("Login");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"User not exist - '{userId}'.");
+            }
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            // Xác thực email
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+
+            if (result.Succeeded)
+            {
+                return View();              
+            }
+            else
+            {
+                return Content("Something wrong in confirming email!");
+            }
+            
         }
     }
 }

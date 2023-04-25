@@ -1,12 +1,12 @@
-
-using System.Configuration;
-using FA.JustBlog.Core.DbInitializer;
+﻿using FA.JustBlog.Core.DbInitializer;
 using FA.JustBlog.Core.Models;
 using FA.JustBlog.Core.UnitOfWork;
 using FA.JustBlog.Properties;
+using FA.JustBlog.Services;
 using log4net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace FA.JustBlog
@@ -26,7 +26,16 @@ namespace FA.JustBlog
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddIdentity<AppUser, IdentityRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<JustBlogContext>();
+            builder.Services.AddOptions();                                        // Kích hoạt Options
+            var mailsettings = builder.Configuration.GetSection("MailSettings");  // đọc config
+            builder.Services.Configure<MailSettings>(mailsettings);               // đăng ký để Inject
 
+            builder.Services.AddTransient<IEmailSender, SendMailService>();        // Đăng ký dịch vụ Mail
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.RequireUniqueEmail = true;
+            });
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
