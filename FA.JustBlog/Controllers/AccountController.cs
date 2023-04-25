@@ -108,14 +108,11 @@ namespace FA.JustBlog.Controllers
 
                 // callbackUrl = /Account/ConfirmEmail?userId=useridxx&code=codexxxx
                 // Link trong email người dùng bấm vào, nó sẽ gọi Page: /Acount/ConfirmEmail để xác nhận
-                var callbackUrl = Url.Action(
-                    "ConfirmEmail", "Account",
-                    new { userId = user.Id, code = code }
-                    );
+                var callbackUrl = Url.ActionLink("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
 
                 // Gửi email    
-                await _emailSender.SendEmailAsync(email, "Xác nhận địa chỉ email",
-                    $"Hãy xác nhận địa chỉ email bằng cách <a href='{callbackUrl}'>Bấm vào đây</a>.");
+                await _emailSender.SendEmailAsync(email, "Confirm Your Just Blog Account Email Address",
+                    $"To confirm your email address, please <a href='{callbackUrl}'>Click here</a>.");
 
                 if (_userManager.Options.SignIn.RequireConfirmedEmail)
                 {
@@ -177,25 +174,78 @@ namespace FA.JustBlog.Controllers
                 // Chua co tk => tao tk
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    var user = new AppUser
+                    string externalMail = info.Principal.FindFirstValue(ClaimTypes.Email);
+                    var userWithexternalMail = (externalMail != null) ? (await _userManager.FindByEmailAsync(externalMail)) : null;
+                    // Xử lý khi có thông tin về email từ info, đồng thời có user với email đó
+                    // trường hợp này sẽ thực hiện liên kết tài khoản ngoài + xác thực email luôn     
+                    if ((userWithexternalMail != null))
                     {
-                        UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
-                    var resultCreate = await _userManager.CreateAsync(user);
-                    if (resultCreate.Succeeded)
-                    {
-                        resultCreate = await _userManager.AddLoginAsync(user, info);
-                        if (resultCreate.Succeeded)
+                        // xác nhận email luôn nếu chưa xác nhận
+                        if (!userWithexternalMail.EmailConfirmed)
                         {
-                            await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                            var codeactive = await _userManager.GenerateEmailConfirmationTokenAsync(userWithexternalMail);
+                            await _userManager.ConfirmEmailAsync(userWithexternalMail, codeactive);
                         }
-                        return RedirectToAction("Index", "Home");
+                        // Thực hiện liên kết info và user
+                        var resultAdd = await _userManager.AddLoginAsync(userWithexternalMail, info);
+                        if (resultAdd.Succeeded)
+                        {
+                            // Thực hiện login    
+                            await _signInManager.SignInAsync(userWithexternalMail, isPersistent: false);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else
+                        {
+                            return Content("Something is wrong when atempting to link account");
+                        }
                     }
-
-                    foreach (var item in resultCreate.Errors)
+                    var user = new AppUser { UserName = info.Principal.FindFirstValue(ClaimTypes.Email), Email = info.Principal.FindFirstValue(ClaimTypes.Email) };
+                    var resultAddNew = await _userManager.CreateAsync(user);
+                    if (resultAddNew.Succeeded)
                     {
-                        ModelState.AddModelError(string.Empty,item.Description);
+
+                        // Liên kết tài khoản ngoài với tài khoản vừa tạo
+                        resultAddNew = await _userManager.AddLoginAsync(user, info);
+                        if (resultAddNew.Succeeded)
+                        {
+                            // Email tạo tài khoản và email từ info giống nhau -> xác thực email luôn
+                            if (user.Email == externalMail)
+                            {
+                                var codeactive = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                                await _userManager.ConfirmEmailAsync(user, codeactive);
+                                await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                                return RedirectToAction("Index", "Home");
+                            }
+
+                            // Trường hợp này Email tạo User khác với Email từ info (hoặc info không có email)
+                            // sẽ gửi email xác để người dùng xác thực rồi mới có thể đăng nhập
+                            //var userId = await _userManager.GetUserIdAsync(user);
+                            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                            //var callbackUrl = Url.Page(
+                            //    "/Account/ConfirmEmail",
+                            //    pageHandler: null,
+                            //    values: new { area = "Identity", userId = userId, code = code },
+                            //    protocol: Request.Scheme);
+
+                            //await _emailSender.SendEmailAsync(Input.Email, "Xác nhận địa chỉ email",
+                            //    $"Hãy xác nhận địa chỉ email bằng cách <a href='{callbackUrl}'>bấm vào đây</a>.");
+
+                            //// Chuyển đến trang thông báo cần kích hoạt tài khoản
+                            //if (_userManager.Options.SignIn.RequireConfirmedEmail)
+                            //{
+                            //    return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                            //}
+
+                            //// Đăng nhập ngay do không yêu cầu xác nhận email
+                            //await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+
+                            //return LocalRedirect(returnUrl);
+                        }
+                    }
+                    foreach (var error in resultAddNew.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
 

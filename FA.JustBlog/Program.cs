@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace FA.JustBlog
 {
@@ -55,6 +56,13 @@ namespace FA.JustBlog
                     options.ClientId = gconfig["ClientId"];
                     options.ClientSecret = gconfig["ClientSecret"];
                     options.CallbackPath = $"/Account/GoogleLogin";
+                }).AddFacebook(facebookOptions => {
+                    // Đọc cấu hình
+                    IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
+                    facebookOptions.AppId = facebookAuthNSection["AppId"];
+                    facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
+                    
+                    facebookOptions.CallbackPath = $"/Account/FacebookLogin";
                 });
             var app = builder.Build();
 
