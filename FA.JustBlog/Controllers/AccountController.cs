@@ -217,30 +217,7 @@ namespace FA.JustBlog.Controllers
                                 return RedirectToAction("Index", "Home");
                             }
 
-                            // Trường hợp này Email tạo User khác với Email từ info (hoặc info không có email)
-                            // sẽ gửi email xác để người dùng xác thực rồi mới có thể đăng nhập
-                            //var userId = await _userManager.GetUserIdAsync(user);
-                            //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                            //var callbackUrl = Url.Page(
-                            //    "/Account/ConfirmEmail",
-                            //    pageHandler: null,
-                            //    values: new { area = "Identity", userId = userId, code = code },
-                            //    protocol: Request.Scheme);
-
-                            //await _emailSender.SendEmailAsync(Input.Email, "Xác nhận địa chỉ email",
-                            //    $"Hãy xác nhận địa chỉ email bằng cách <a href='{callbackUrl}'>bấm vào đây</a>.");
-
-                            //// Chuyển đến trang thông báo cần kích hoạt tài khoản
-                            //if (_userManager.Options.SignIn.RequireConfirmedEmail)
-                            //{
-                            //    return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-                            //}
-
-                            //// Đăng nhập ngay do không yêu cầu xác nhận email
-                            //await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-
-                            //return LocalRedirect(returnUrl);
+                            
                         }
                     }
                     foreach (var error in resultAddNew.Errors)

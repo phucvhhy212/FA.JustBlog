@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
 
 namespace FA.JustBlog
 {
@@ -20,7 +19,7 @@ namespace FA.JustBlog
 
             var logger = LogManager.GetLogger(typeof(Program));
             var builder = WebApplication.CreateBuilder(args);
-
+ 
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<JustBlogContext>(options =>
