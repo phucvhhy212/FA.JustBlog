@@ -25,7 +25,7 @@ namespace FA.JustBlog.Core.Models
         {
             base.OnConfiguring(optionsBuilder);
             if(!optionsBuilder.IsConfigured)
-                optionsBuilder.UseSqlServer(@"Server=AUG31;Database=BlogDb;User Id=sa;Password=123;TrustServerCertificate=true");
+                optionsBuilder.UseSqlServer(@"Server=192.168.0.1025;Database=BlogDb;User Id=sa;Password=123;TrustServerCertificate=true");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
