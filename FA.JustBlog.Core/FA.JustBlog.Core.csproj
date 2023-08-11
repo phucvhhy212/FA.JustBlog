@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="D:\FA.JustBlog\FA.JustBlog.Common\FA.JustBlog.Common.csproj" />
+    <ProjectReference Include="..\FA.JustBlog.Common\FA.JustBlog.Common.csproj" />
   </ItemGroup>
 
 </Project>
