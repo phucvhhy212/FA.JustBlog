@@ -23,7 +23,7 @@ namespace FA.JustBlog
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<JustBlogContext>(options =>
-                options.UseSqlServer(connectionString));
+                options.UseMySQL(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddIdentity<AppUser, IdentityRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<JustBlogContext>();
             builder.Services.AddOptions();                                        // Kích hoạt Options
@@ -63,8 +63,9 @@ namespace FA.JustBlog
                     
                     facebookOptions.CallbackPath = $"/Account/FacebookLogin";
                 });
+            
             var app = builder.Build();
-
+            string? port = Environment.GetEnvironmentVariable("PORT"); if (!string.IsNullOrWhiteSpace(port)) { app.Urls.Add("http://*:" + port); }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())    
             {

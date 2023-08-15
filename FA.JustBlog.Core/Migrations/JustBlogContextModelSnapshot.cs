@@ -3,7 +3,6 @@ using System;
 using FA.JustBlog.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -17,10 +16,8 @@ namespace FA.JustBlog.Core.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.10")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+                .HasAnnotation("ProductVersion", "6.0.21")
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("FA.JustBlog.Core.Models.Category", b =>
                 {
@@ -28,22 +25,20 @@ namespace FA.JustBlog.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("UrlSlug")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -79,32 +74,30 @@ namespace FA.JustBlog.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("CommentHeader")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("CommentText")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<DateTime>("CommentTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 4, 20, 21, 55, 28, 649, DateTimeKind.Local).AddTicks(3812));
+                        .HasColumnType("datetime(6)")
+                        .HasDefaultValue(new DateTime(2023, 8, 15, 13, 54, 25, 545, DateTimeKind.Local).AddTicks(5350));
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("PostId")
                         .HasColumnType("int");
@@ -144,23 +137,21 @@ namespace FA.JustBlog.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Modified")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("PostContent")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("PostedOn")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("Published")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("RateCount")
                         .HasColumnType("int");
@@ -168,12 +159,12 @@ namespace FA.JustBlog.Core.Migrations
                     b.Property<string>("ShortDescription")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("TotalRate")
                         .HasColumnType("int");
@@ -181,7 +172,7 @@ namespace FA.JustBlog.Core.Migrations
                     b.Property<string>("UrlSlug")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("int");
@@ -244,7 +235,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 1,
                             Modified = false,
                             PostContent = "Programming is the process of designing, writing, testing, and maintaining software. It involves creating instructions that a computer can execute to solve a particular problem or perform a specific task. Programming languages, such as Java and Python, are used to write these instructions, which are then compiled or interpreted into machine code that a computer can understand.",
-                            PostedOn = new DateTime(2023, 4, 20, 21, 55, 28, 649, DateTimeKind.Local).AddTicks(6095),
+                            PostedOn = new DateTime(2023, 8, 15, 13, 54, 25, 545, DateTimeKind.Local).AddTicks(7232),
                             Published = true,
                             RateCount = 2,
                             ShortDescription = "An overview of programming concepts",
@@ -259,7 +250,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 2,
                             Modified = false,
                             PostContent = "Regular exercise has numerous health benefits. It can help maintain a healthy weight, reduce the risk of chronic diseases such as diabetes and heart disease, improve mental health, and increase overall well-being. Exercise can also improve sleep, increase energy levels, and reduce stress and anxiety. The recommended amount of exercise varies depending on age and fitness level, but generally adults should aim for at least 150 minutes of moderate-intensity aerobic exercise per week.",
-                            PostedOn = new DateTime(2023, 4, 20, 21, 55, 28, 649, DateTimeKind.Local).AddTicks(6099),
+                            PostedOn = new DateTime(2023, 8, 15, 13, 54, 25, 545, DateTimeKind.Local).AddTicks(7234),
                             Published = true,
                             RateCount = 4,
                             ShortDescription = "Why regular exercise is important for health",
@@ -274,7 +265,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 3,
                             Modified = false,
                             PostContent = "Effective time management is essential for productivity and success. It involves prioritizing tasks, setting goals, and planning ahead. One helpful technique is the Pomodoro method, which involves breaking work into 25-minute intervals with short breaks in between. Another strategy is to use a task list or calendar to stay organized and track progress. Time management can also involve delegating tasks, saying no to distractions, and taking breaks to recharge.",
-                            PostedOn = new DateTime(2023, 4, 20, 21, 55, 28, 649, DateTimeKind.Local).AddTicks(6102),
+                            PostedOn = new DateTime(2023, 8, 15, 13, 54, 25, 545, DateTimeKind.Local).AddTicks(7236),
                             Published = true,
                             RateCount = 3,
                             ShortDescription = "Tips for managing your time effectively",
@@ -289,7 +280,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 1,
                             Modified = false,
                             PostContent = "Yoga is a mind-body practice that combines physical postures, breathing exercises, and meditation or relaxation. It has been shown to have numerous health benefits, including reducing stress and anxiety, improving flexibility and balance, and promoting relaxation and better sleep. Yoga may also help reduce inflammation and lower blood pressure and cholesterol levels. There are many different styles of yoga, so it is important to find a practice that works for you. Practicing yoga regularly can be a great addition to a healthy lifestyle.",
-                            PostedOn = new DateTime(2023, 4, 20, 21, 55, 28, 649, DateTimeKind.Local).AddTicks(6103),
+                            PostedOn = new DateTime(2023, 8, 15, 13, 54, 25, 545, DateTimeKind.Local).AddTicks(7237),
                             Published = true,
                             RateCount = 12,
                             ShortDescription = "How practicing yoga can improve your health",
@@ -304,7 +295,7 @@ namespace FA.JustBlog.Core.Migrations
                             CategoryId = 2,
                             Modified = false,
                             PostContent = "Positive thinking is a mental attitude that focuses on the good in any situation and expects positive outcomes. It has been shown to have numerous benefits, including reducing stress and anxiety, improving overall health and well-being, and increasing resilience and optimism. Positive thinking can help people cope with difficult situations and overcome challenges. It is not about ignoring negative experiences or denying reality, but rather about approaching them with a positive and proactive mindset. Developing a practice of positive thinking can lead to greater happiness and success in all areas of life.",
-                            PostedOn = new DateTime(2023, 4, 20, 21, 55, 28, 649, DateTimeKind.Local).AddTicks(6104),
+                            PostedOn = new DateTime(2023, 8, 15, 13, 54, 25, 545, DateTimeKind.Local).AddTicks(7238),
                             Published = true,
                             RateCount = 14,
                             ShortDescription = "How changing your mindset can change your life",
@@ -403,25 +394,23 @@ namespace FA.JustBlog.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1024)
-                        .HasColumnType("nvarchar(1024)");
+                        .HasColumnType("varchar(1024)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("UrlSlug")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -457,26 +446,25 @@ namespace FA.JustBlog.Core.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasDatabaseName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles", (string)null);
                 });
@@ -487,17 +475,15 @@ namespace FA.JustBlog.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("RoleId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -509,58 +495,58 @@ namespace FA.JustBlog.Core.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
 
@@ -569,8 +555,7 @@ namespace FA.JustBlog.Core.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
 
@@ -583,17 +568,15 @@ namespace FA.JustBlog.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
 
@@ -605,17 +588,17 @@ namespace FA.JustBlog.Core.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -627,10 +610,10 @@ namespace FA.JustBlog.Core.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -642,16 +625,16 @@ namespace FA.JustBlog.Core.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
                     b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("longtext");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
