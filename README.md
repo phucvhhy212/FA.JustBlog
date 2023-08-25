@@ -20,7 +20,7 @@ JustBlog - ASP.NET Core MVC project:
  - Using Partial view for most viewed posts and latest posts.
  - Dynamic menu by category: User click on any item in menu to redirect to page that list of all posts under category.
  - Routing and SEO url for posts (by category, by date, by tags).
- - Admin MVC Area
+ - Admin MVC Area.
  - CRUD actions with models (Admin).
  - Others:
    + jQueryValidation
